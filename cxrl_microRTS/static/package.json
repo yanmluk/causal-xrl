@@ -1,0 +1,15 @@
+{
+  "name": "stratvis",
+  "version": "1.0.0",
+  "description": "xrl project base on gym microrts environment",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "yanming zhang",
+  "license": "MIT",
+  "dependencies": {
+    "d3-scale-chromatic": "^3.0.0",
+    "d3-tip": "^0.7.1"
+  }
+}

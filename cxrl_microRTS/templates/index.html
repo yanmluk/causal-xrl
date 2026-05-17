@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css"> -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous"> -->
+    <script type = "text/javascript" src="{{ url_for('static', filename='node_modules/d3-color/dist/d3-color.min.js') }}" charset="utf-8"></script>
+    <script type = "text/javascript" src="{{ url_for('static', filename='node_modules/d3-interpolate/dist/d3-interpolate.min.js') }}" charset="utf-8"></script>
+    <script type = "text/javascript" src="{{ url_for('static', filename='node_modules/d3-scale-chromatic/dist/d3-scale-chromatic.min.js') }}" charset="utf-8"></script>
+    <script type = "text/javascript" src="{{ url_for('static', filename='node_modules/d3-tip/index.js')}}" charset="utf-8"></script>
+    <script type = "text/javascript" src="{{ url_for('static', filename='vendor/jquery/jquery-3.3.1.min.js') }}"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}"  type="text/css">
+    <!-- styled toogle/switch -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap5-toggle@5.0.4/css/bootstrap5-toggle.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap5-toggle@5.0.4/js/bootstrap5-toggle.jquery.min.js"></script>
+
+    <script src="https://d3js.org/d3.v4.min.js" charset="utf-8"></script>
+    <script type = "text/javascript" src="{{ url_for('static', filename='vendor//d3-v4-contextmenu.js') }}"></script>
+    <title>XRL</title>
+    <link rel='icon' href="{{ url_for('static', filename='favicon.ico') }}" type='image/x-icon'/>
+</head>
+<body>
+    <div class="container1">
+        <div class="nav_bar" id="nav_bar">
+            <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+                <div class="container-fluid">
+                  <a class="navbar-brand" href="#">&emsp;StratViz RL</a>
+                  <form class="d-flex">
+                    <a class="nav-link" href="javascript:window.location.reload(true)" id="reset_link">RESET</a>
+                  </form>
+                </div>
+              </nav>
+        </div>
+        <div class="ctrl_pan" id="ctrl_pan">
+          <div class="row justify-content-start">
+            <div class="col-4">
+              <label class="ctrlpan_label">Load Map</label>
+            </div>
+            <div class="col-8">
+              <input type="file" class="form-control" id="load_map"/>
+            </div>
+          </div>
+          <div class="row justify-content-start">
+            <div class="col-4">
+              <label class="ctrlpan_label">State Analyzing</label>
+            </div>
+            <div class="col-8">
+              <div class="form-floating">
+                <select class="form-select" id="state_anlz_select">
+                </select>
+                <label for="state_anlz_select">State Isolated from Replay</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-4 row justify-content-start">
+            <div class="col-8">
+              <label class="ctrlpan_label">Counterfactual Unit</label>
+            </div>
+            <div class="col-4">
+            </div>
+          </div>
+          <div class="row justify-content-start">
+            <div class="col-3">
+              <label class="ctrlpan_label_sm">Unit Type</label>
+            </div>
+            <div class="col-3">
+              <select class="form-select" id="ut_select">
+                <option value=0>-</option>
+                <option value=1>resource</option>
+                <option value=2>base</option>
+                <option value=3>barrack</option>
+                <option value=4 selected>worker</option>
+                <option value=5>light</option>
+                <option value=6>heavy</option>
+                <option value=7>ranged</option>
+              </select>
+            </div>
+            <div class="col-3">
+              <label class="ctrlpan_label_sm">Resource Carry</label>
+            </div>
+            <div class="col-3">
+              <select class="form-select" id="rsc_select">
+                <option value=0>0</option>
+                <option value=1>1</option>
+                <option value=2>2</option>
+                <option value=3>3</option>
+                <option value=4>>=4</option>
+              </select>
+            </div>
+          </div>
+          <div class="row justify-content-start">
+            <div class="col-3">
+              <label class="ctrlpan_label_sm">Hit Points</label>
+            </div>
+            <div class="col-3">
+              <select class="form-select" id="hp_select">
+                <option value=0>0</option>
+                <option value=1 selected>1</option>
+                <option value=2>2</option>
+                <option value=3>3</option>
+                <option value=4>>=4</option>
+              </select>
+            </div>
+            <div class="col-3">
+              <label class="ctrlpan_label_sm">Current Action</label>
+            </div>
+            <div class="col-3">
+              <select class="form-select" id="curact_select">
+                <option value=0>-</option>
+                <option value=1>move</option>
+                <option value=2>harvest</option>
+                <option value=3>return</option>
+                <option value=4>produce</option>
+                <option value=5>attack</option>
+              </select>
+            </div>
+          </div>
+          <div class="row justify-content-start">
+            <div class="col-3">
+              <label class="ctrlpan_label_sm">Owner</label>
+            </div>
+            <div class="col-6">
+              <select class="form-select" id="owner_select">
+                <option value=0>-</option>
+                <option value=1 selected>player1</option>
+                <option value=2>player2</option>
+              </select>
+            </div>
+          </div>
+          <div class="mt-3 row justify-content-start">
+            <div class="col-8">
+              <label class="ctrlpan_label">Show Counterfactual Action Map</label>
+            </div>
+            <div class="col-4">
+              <div class="form-check form-switch form-switch-md">
+                <input class="form-check-input" type="checkbox" role="switch" id="show_cam_switch">
+              </div>
+            </div>
+          </div>
+          <div class="row justify-content-start">
+            <div class="col-8">
+              <label class="ctrlpan_label">Show Uncertainty Map</label>
+            </div>
+            <div class="col-4">
+              <div class="form-check form-switch form-switch-md">
+                <input class="form-check-input" type="checkbox" role="switch" id="show_um_switch">
+              </div>
+            </div>
+          </div>
+          <div class="row justify-content-start">
+            <div class="col-8">
+              <label class="ctrlpan_label">Show MicroRTS Legend</label>
+            </div>
+            <div class="col-4">
+              <div class="form-check form-switch form-switch-md">
+                <input class="form-check-input" checked type="checkbox" role="switch" id="show_lgd_switch">
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="board_pan position-relative" id="board_pan">
+          <div class="position-absolute top-0 mt-2" id="mode_toggle_div">
+            <input type="checkbox" checked data-toggle="toggle" data-style="ios" data-onlabel="Intervene" data-offlabel="Replay" data-onstyle="warning" data-offstyle="success" id="play_intv_switch">
+          </div>
+          <div class="btn-group-vertical btn-group-lg position-absolute top-50 end-0 translate-middle-y" role="group" aria-label="Basic example">
+            <button type="button" class="btn btn-light" id="down_map_btn">
+              <i class="bi bi-download" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-title="Download Current Map"></i>
+            </button>
+            <button type="button" class="btn btn-light" id="get_cam_btn" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-title="Counterfactual Action Map">
+              <i class="bi bi-diagram-2 rotated90"></i>
+            </button>
+            <button type="button" class="btn btn-light" id="get_um_btn" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-title="Uncertainty Map">
+              <i class="bi bi-book-half"></i>
+            </button>
+            <button type="button" class="btn btn-light" id="record_state_btn" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-title="Record Current State">
+              <i class="bi bi-feather"></i>
+            </button>
+            <button type="button" class="btn btn-light" id="play_epsd_btn" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-title="Play an Episode">
+              <i class="bi bi-play-btn"></i>
+            </button>
+          </div>
+          <div class="position-absolute start-50 translate-middle-x" id="board_slider_div">
+            <input type="range" class="form-range" min="0" max="100" value="0" id="board_range">
+          </div>
+          <div class="text-center position-absolute start-50 translate-middle-x" id="board_play_div">
+            <button class="mdl-button mdl-js-button mdl-button--fab mdl-button--colored ui-stepButton" id="replay_prev_btn" title="Backward One Frame" data-upgraded=",MaterialButton">
+              <i class="material-icons">skip_previous</i>
+            </button>
+            <button class="mdl-button mdl-button--fab mdl-button--colored" id="replay_play_btn" title="Play/Pause" data-upgraded=",MaterialButton">
+              <i class="material-icons">play_arrow</i>
+            </button>
+            <button class="mdl-button mdl-js-button mdl-button--fab mdl-button--colored ui-stepButton" id="replay_next_btn" title="Forward One Frame" data-upgraded=",MaterialButton">
+              <i class="material-icons">skip_next</i>
+            </button>
+          </div>
+          <div id="board_spinner" class="position-absolute top-0 end-0 mt-2">
+            <div class="spinner-border" role="status" style="width: 3rem; height: 3rem;"></div>
+          </div>
+        </div>
+
+        <div class="cs_graph" id="cs_graph">
+        </div>
+        <div class="feat_pan position-relative" id="feat_pan">
+          <div class="position-absolute top-0 end-0">
+            <div class="form-check form-switch">
+              <label class="form-check-label" for="unitEvalSwitch">Evaluate unit's plan</label>
+              <input class="form-check-input" type="checkbox" role="switch" id="unitEvalSwitch">
+            </div>
+          </div>
+        </div>
+        <div class="view_pan position-relative" id="view_pan">
+            <div class="position-absolute top-0 start-0">
+              <label>Unit Counterfactual Step</label>
+              <label id="unit_step_lbl">0</label>
+            </div>
+            <div class="position-absolute top-0 end-0">
+              <div class="form-check form-switch">
+                <label class="form-check-label" for="unitPlanSwitch">Show unit's plan</label>
+                <input class="form-check-input" type="checkbox" role="switch" id="unitPlanSwitch">
+              </div>
+            </div>
+          <div class="text-center mt-4">
+            <button class="mdl-button mdl-js-button mdl-button--fab mdl-button--colored ui-stepButton" id="prev-step-button" title="Move by one" data-upgraded=",MaterialButton">
+              <i class="material-icons">skip_previous</i>
+            </button>
+            <button class="mdl-button mdl-button--fab mdl-button--colored" id="play-pause-button" title="Play/Pause" data-upgraded=",MaterialButton">
+              <i class="material-icons">play_arrow</i>
+            </button>
+            <button class="mdl-button mdl-js-button mdl-button--fab mdl-button--colored ui-stepButton" id="next-step-button" title="Move by one" data-upgraded=",MaterialButton">
+              <i class="material-icons">skip_next</i>
+            </button>
+          </div>
+          <div id="user_div" class="position-absolute bottom-0 text-center" style="width:100%">
+            <button class="btn btn-outline-dark mb-3" type="button" id="case1_btn" style="width:80%">Go to Task3 Case1</button>
+            <button class="btn btn-outline-dark mb-3" type="button" id="case2_btn" style="width:80%">Go to Task3 Case2</button>
+          </div>
+          
+        </div>
+        <div class="h_gap"></div>
+        <div class="v_gap1"></div>
+        <div class="v_gap2"></div>
+        <div class="v_gap3"></div>
+        <div class="v_gap4"></div>
+        <div class="bl_pan"></div>
+    </div>
+
+
+  <!-- Add counterfactual action -->
+  <div class="modal fade" id="cfuModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Confirmation Page</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body" id="cfu_modal_body">
+          <p>I'm aware of the parameters of counterfactual unit in control panel</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" id="cfu_cfrm_btn">Confirm</button>
+          <!-- <button type="button" class="btn btn-primary" id="query_cfu_btn">Query Counterfactuals</button>
+          <button type="button" class="btn btn-primary" id="uncrt_btn">Get Uncertainty Map</button> -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+    <!-- Add uncertainty map Modal -->
+    <div class="modal fade" id="umModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Confirmation Page</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body" id="um_modal_body">
+            <p>I'm aware of the parameters of counterfactual unit in control panel</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" id="um_cfrm_btn">Confirm</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+        <!-- Add play episode Modal -->
+        <div class="modal fade" id="playModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Confirmation Page</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <p>By clicking confirm button, the game will be run for one episode</p>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="play_cfrm_btn">Confirm</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      <!-- Add unit run counterfactual steps Modal -->
+      <div class="modal fade" id="unitctfstpsModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">The current state on interface is the initial state</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="unitctfstps_modal_body">
+              <br>
+              <label id="ctfstps_modal_label">Number of steps to run(>=2)</label>
+              <input type="text" id="unit_step_txb" value="10" size="4" />
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary" id="unitctfstps_btn">Run Steps</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    <!-- Specify download file Modal -->
+    <div class="modal fade" id="downloadModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Please specify name for the map</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body" id="download_modal_body">
+          <br>
+          <label>File Name:</label>
+          <input type="text" id="downFileName" value="map" size="8"/>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary" id="downmap_cfm_btn">Confirm</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <script src="{{ url_for('static', filename='js/globalvars.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/bootsrtap_ext.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/utils.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/addUnit.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/excuteActions.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/drawAction.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/plot_counterfactual_action_map.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/plot_uncertainty_map.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/replayTrack.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/drawPlayTrack.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/drawUnitPath.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/drawCausalLayout.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/addBoardLegend.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/index.js') }}"></script>
+</body>
+</html>

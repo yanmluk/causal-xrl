@@ -1,0 +1,11 @@
+map_path.txt
+
+__pycache__
+
+*.pyc
+
+.ipynb_checkpoints
+
+/data/*.pickle
+/data/*.npz
+*.ipynb
